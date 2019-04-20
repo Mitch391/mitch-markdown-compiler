@@ -1,36 +1,36 @@
-def check_if_file_exists(fh):
+def check_if_file_exists(file_name):
     try:
-        source_file = open(fh, 'r')
+        source_file = open(file_name, 'r')
     except FileNotFoundError:
         print("Target File Not Found")
         exit(1)
     return source_file
 
 
-def check_if_file_is_md(fh):
-    if not fh.lower().endswith('.md'):
-        print("Invalid File Type: " + fh)
+def check_if_file_is_md(file_name):
+    if not file_name.lower().endswith('.md'):
+        print("Invalid File Type: " + file_name)
         print("File must end with .md")
         exit(1)
 
-def check_for_flags(cli_args, fh):
+def check_for_flags(cli_args, file_name):
     flags = []
     for cli_arg in cli_args:
         if cli_arg.startswith("-"):
             flags.append(cli_arg)
         else:
-            fh = cli_arg
-    return fh, flags
+            file_name = cli_arg
+    return file_name, flags
 
 
 def check_all(cli_args):
-    fh = None
-    fh, flags = check_for_flags(cli_args[1:], fh)
+    file_name = None
+    file_name, flags = check_for_flags(cli_args[1:], file_name)
 
-    if fh == None:
+    if file_name == None:
         print("Please add a file to compile")
         exit(1)
 
-    check_if_file_exists(fh)
-    check_if_file_is_md(fh)
-    return fh, flags
+    fh = check_if_file_exists(file_name)
+    check_if_file_is_md(file_name)
+    return file_name, fh, flags
