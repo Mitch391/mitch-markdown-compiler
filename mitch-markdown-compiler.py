@@ -1,7 +1,7 @@
 import os
 import sys
 import checks
-import analysis
+import make_tokens
 
 def exists_output_file(file_name_html):
     if os.path.exists(file_name_html):
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     standard_head_text = output_file_standard_head_text(file_name)
     dest_file.write(standard_head_text)
 
-    html = analysis.analyse_source(fh)
+    html = make_tokens.analyse_source(fh)
     
     standard_bottom_text = output_file_standard_bottom_text()
     dest_file.write(standard_bottom_text)
