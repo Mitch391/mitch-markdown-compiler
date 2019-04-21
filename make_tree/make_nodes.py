@@ -29,17 +29,19 @@ def search_for_markup(track_node, curr_node, found):
 
     if not found:
         return False, None
+
     text = curr_node.get_text()
 
-    if first_span[2] in ["bold"]:
+    if first_span[2] in ["bold", "italic", "monospace"]:
         track_node_first_span_bool = getattr(track_node, first_span[2])
+        setattr(track_node, first_span[2], not track_node_first_span_bool)
     else:
         make_empty_node(curr_node, first_span[2], text, first_span)
         return found, curr_node
 
-    if track_node_first_span_bool == True:
+    if track_node_first_span_bool == False:
         _, curr_node = open_node(curr_node, first_span[2], text, first_span)
-    elif track_node_first_span_bool == False:
+    elif track_node_first_span_bool == True:
         curr_node = close_node(curr_node, text, first_span)
 
     return found, curr_node

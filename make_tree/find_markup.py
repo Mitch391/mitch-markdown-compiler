@@ -2,8 +2,16 @@ def find_all_first_spans(text, track_node):
     all_first_spans = []
     found_bold = track_node.check_for_bold_in_text(text)
     found_horizontal_rule = track_node.check_for_horizontal_rule(text)
+    found_italic = track_node.check_for_italic_in_text(text)
+    found_monospace = track_node.check_for_monospace_in_text(text)
     if found_bold:
         found = found_bold + ("bold",)
+        all_first_spans.append(found)
+    if found_italic:
+        found = found_italic + ("italic",)
+        all_first_spans.append(found)
+    if found_monospace:
+        found = found_monospace + ("monospace",)
         all_first_spans.append(found)
     if found_horizontal_rule:
         found = found_horizontal_rule + ("horizontal_rule",)

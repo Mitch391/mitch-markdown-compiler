@@ -40,6 +40,5 @@ def print_nodes(node, tabs):
     print_node(node, tabs)
 
 def print_node(node, tabs):
-    print(repr(tabs + node.type_node + ": "), end="")
-    print(repr(str(node.print_level) + ": "), end="")
+    print(tabs + node.type_node + ": ", end="")
     print(repr(node.text[node.print_level]))

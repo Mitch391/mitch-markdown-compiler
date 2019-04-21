@@ -16,29 +16,36 @@ class Keep_track_of_nodes:
         self.hyperlink = hyperlink
         self.blockquote = blockquote
 
-    def check_for_nodes_word(self, word):
-        if word.startswith('**'):
-            bold = True
-        if word.endswith('**'):
-            bold = False
-
     def check_for_horizontal_rule(self, text):
         found = re.search("-+", text)
         if found:
             return found.span()
         return None
 
-    def check_for_linebreak(self, line):
-        if re.match(".*  $", line):
-            return True
-        return False
+    def check_for_monospace_in_text(self, text):
+        found = re.search("`", text)
+        if found:
+            return found.span()
+        return None
 
     def check_for_bold_in_text(self, text):
         found = re.search("\*\*", text)
         if found:
-            self.bold = not self.bold
+            return found.span()
+        return None
+
+    def check_for_italic_in_text(self, text):
+        found = re.search("_", text)
+        if found:
             return found.span()
         return None
 
     def add_start_node(self, node):
         self.start_node = node
+
+    def print_values(self):
+        #  print("heading", self.heading)
+        #  print("sub_heading", self.sub_heading)
+        #  print("paragraph", self.paragraph)
+        print("italic", self.italic)
+        print("bold", self.bold)
