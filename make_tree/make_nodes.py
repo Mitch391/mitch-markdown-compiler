@@ -5,6 +5,7 @@ import find_markup
 
 def make_empty_node(curr_node, type_next_node, text, found_span):
     next_node = nodes.Node(type_next_node, [''], curr_node, [])
+    next_node.set_text(text[found_span[0]:found_span[1]])
     curr_node.add_next_node(next_node)
     curr_node.set_text(text[:found_span[0]])
     curr_node.add_text(text[found_span[1]:])
@@ -31,12 +32,21 @@ def search_for_markup(track_node, curr_node, found):
         return False, None
 
     text = curr_node.get_text()
+    markup_type = first_span[2]
 
-    if first_span[2] in ["bold", "italic", "monospace"]:
-        track_node_first_span_bool = getattr(track_node, first_span[2])
-        setattr(track_node, first_span[2], not track_node_first_span_bool)
+    if markup_type in ["bold", "italic", "monospace"]:
+        track_node_first_span_bool = getattr(track_node, markup_type)
+        setattr(track_node, markup_type, not track_node_first_span_bool)
+    elif markup_type in ["sub_heading"]:
+        sub_heading_level = first_span[3]
+        markup_type = "sub_heading" + str(sub_heading_level)
+        first_span = (first_span[0], first_span[1])
+        make_empty_node(curr_node, markup_type, text, first_span)
+        sub_heading_node = curr_node.next_node[-1]
+        sub_heading_node.text[0] = sub_heading_node.text[0][sub_heading_level:]
+        return found, curr_node
     else:
-        make_empty_node(curr_node, first_span[2], text, first_span)
+        make_empty_node(curr_node, markup_type, text, first_span)
         return found, curr_node
 
     if track_node_first_span_bool == False:

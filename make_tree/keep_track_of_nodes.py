@@ -16,8 +16,17 @@ class Keep_track_of_nodes:
         self.hyperlink = hyperlink
         self.blockquote = blockquote
 
+    def check_for_sub_heading_in_text(self, text):
+        found = re.search("#+", text)
+        if found:
+            next_newline = re.search(r"\n", text[found.span()[1]:])
+            sub_heading_text = (found.span()[0], next_newline.span()[0]+found.span()[1])
+            sub_heading_level = found.span()[1] - found.span()[0]
+            return sub_heading_text, sub_heading_level
+        return None, None
+
     def check_for_horizontal_rule(self, text):
-        found = re.search("-+", text)
+        found = re.search("^-+$", text)
         if found:
             return found.span()
         return None
