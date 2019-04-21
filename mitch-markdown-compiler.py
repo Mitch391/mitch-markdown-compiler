@@ -1,7 +1,9 @@
 import os
 import sys
 import checks
-import make_tokens
+import make_nodes
+import keep_track_of_nodes
+import nodes
 
 def exists_output_file(file_name_html):
     if os.path.exists(file_name_html):
@@ -42,13 +44,19 @@ if __name__ == '__main__':
     if (sys.argv[0] == sys.argv[-1]):
         print("Please add a file to compile")
 
-    file_name, fh, flags = checks.check_all(sys.argv)
+    file_name, source_file, flags = checks.check_all(sys.argv)
 
     dest_file = make_output_file(file_name)
     standard_head_text = output_file_standard_head_text(file_name)
     dest_file.write(standard_head_text)
 
-    html = make_tokens.analyse_source(fh)
+    track_node = keep_track_of_nodes.Keep_track_of_nodes()
+    start_node = nodes.Node("start", [source_file.read()])
+    track_node.add_start_node(start_node)
+
+    html = make_nodes.analyse_source(source_file, track_node)
+    dest_file.write(html)
     
     standard_bottom_text = output_file_standard_bottom_text()
     dest_file.write(standard_bottom_text)
+    start_node.visualize_node_stream()
