@@ -23,10 +23,10 @@ class Keep_track_of_nodes:
             bold = False
 
     def check_for_horizontal_rule(self, text):
-        found = re.search("\*\*", text)
+        found = re.search("-+", text)
         if found:
             return found.span()
-        return False
+        return None
 
     def check_for_linebreak(self, line):
         if re.match(".*  $", line):

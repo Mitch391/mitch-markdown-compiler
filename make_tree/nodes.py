@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, type_node=None, text=[], prev_node=None, next_node=[]):
+    def __init__(self, type_node=None, text=[''], prev_node=None, next_node=[]):
         self.type_node = type_node
         self.text = text
         self.prev_node = prev_node
