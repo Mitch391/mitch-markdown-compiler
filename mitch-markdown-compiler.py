@@ -1,5 +1,7 @@
 import os
 import sys
+
+sys.path.insert(0, './make_tree')
 import checks
 import make_nodes
 import keep_track_of_nodes

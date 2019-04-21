@@ -22,9 +22,10 @@ class Keep_track_of_nodes:
         if word.endswith('**'):
             bold = False
 
-    def check_for_horizontal_rule(self, line):
-        if re.match("-+", line):
-            return True
+    def check_for_horizontal_rule(self, text):
+        found = re.search("\*\*", text)
+        if found:
+            return found.span()
         return False
 
     def check_for_linebreak(self, line):
