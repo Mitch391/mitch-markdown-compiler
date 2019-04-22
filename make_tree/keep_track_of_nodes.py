@@ -26,7 +26,7 @@ class Keep_track_of_nodes:
         return None, None
 
     def check_for_horizontal_rule(self, text):
-        found = re.search("^-+$", text)
+        found = re.search("\\n-+\\n", text)
         if found:
             return found.span()
         return None
