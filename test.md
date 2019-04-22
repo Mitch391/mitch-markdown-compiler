@@ -29,9 +29,8 @@ Numbered list:
   2. rinse
   3. repeat
 
-A [link][example].
+A [link][https://www.google.com].
 
-  [example]: http://example.com
 
 ![Image](Icon-pictures.png "icon")
 
