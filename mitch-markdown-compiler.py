@@ -52,10 +52,11 @@ if __name__ == '__main__':
     dest_file.write(standard_head_text)
 
     track_node = keep_track_of_nodes.Keep_track_of_nodes()
-    start_node = nodes.Node("start", [source_file.read()])
+    start_node = nodes.Node("root", [source_file.read()])
     track_node.add_start_node(start_node)
 
-    html = make_nodes.analyse_source(source_file, track_node)
+    node_tree = make_nodes.analyse_source(source_file, track_node)
+    html = 'html'
     dest_file.write(html)
     
     standard_bottom_text = output_file_html_standard_bottom_text()

@@ -16,16 +16,37 @@ class Keep_track_of_nodes:
         self.hyperlink = hyperlink
         self.blockquote = blockquote
 
+    def check_for_blockquote_in_text(self, text):
+        found = re.search("\\n>", text)
+        if found:
+            next_newline = re.search("\\n", text[found.span()[1]:])
+            if not next_newline:
+                next_newline = (len(text),)
+            else:
+                next_newline = next_newline.span()
+            return (found.span()[0], found.span()[1]+next_newline[0])
+
+    def check_for_heading_in_text(self, text):
+        found = re.search('\\n=+(\\n|$)', text)
+        if found:
+            found = (found.span()[0], found.span()[1])
+            return found
+        return None
+
     def check_for_sub_heading_in_text(self, text):
         found = re.search("#+", text)
         if found:
-            next_newline = re.search(r"\n", text[found.span()[1]:])
-            sub_heading_text = (found.span()[0], next_newline.span()[0]+found.span()[1])
+            next_newline = re.search("\\n|$", text[found.span()[1]:])
+            if not next_newline:
+                next_newline = (len(text),)
+            else:
+                next_newline = next_newline.span()
+            sub_heading_text = (found.span()[0], next_newline[0]+found.span()[1])
             sub_heading_level = found.span()[1] - found.span()[0]
             return sub_heading_text, sub_heading_level
         return None, None
 
-    def check_for_horizontal_rule(self, text):
+    def check_for_horizontal_rule_in_text(self, text):
         found = re.search("\\n-+\\n", text)
         if found:
             return found.span()
