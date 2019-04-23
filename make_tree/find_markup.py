@@ -7,6 +7,7 @@ def find_all_first_spans(text, track_node):
     found_sub_heading, sub_heading_level = track_node.check_for_sub_heading_in_text(text)
     found_heading = track_node.check_for_heading_in_text(text)
     found_blockquote = track_node.check_for_blockquote_in_text(text)
+    found_linebreak = track_node.check_for_linebreak_in_text(text)
     if found_bold:
         found = found_bold + ("bold",)
         all_first_spans.append(found)
@@ -27,6 +28,9 @@ def find_all_first_spans(text, track_node):
         all_first_spans.append(found)
     if found_blockquote:
         found = found_blockquote + ("blockquote",)
+        all_first_spans.append(found)
+    if found_linebreak:
+        found = found_linebreak + ("linebreak",)
         all_first_spans.append(found)
 
     return all_first_spans

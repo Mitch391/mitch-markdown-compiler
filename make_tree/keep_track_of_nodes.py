@@ -16,6 +16,12 @@ class Keep_track_of_nodes:
         self.hyperlink = hyperlink
         self.blockquote = blockquote
 
+    def check_for_linebreak_in_text(self, text):
+        found = re.search(r'  \n', text)
+        if found:
+            return found.span()
+        return None
+
     def check_for_blockquote_in_text(self, text):
         found = re.search("\\n>", text)
         if found:
