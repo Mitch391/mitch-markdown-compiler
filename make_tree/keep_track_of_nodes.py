@@ -1,12 +1,10 @@
 import re
+import pdb
 
 class Keep_track_of_nodes:
-    def __init__(self, heading=False, sub_heading=False, paragraph=False,
-                       italic=False, bold=False, monospace=False,
-                       bullet_list=False, numbered_list=False,
-                       hyperlink=False, blockquote=False):
-        self.heading = heading
-        self.sub_heading = sub_heading
+    def __init__(self, paragraph=False, italic=False, bold=False,
+                       monospace=False, bullet_list=False, numbered_list=False,
+                       hyperlink=False):
         self.paragraph = paragraph
         self.italic = italic
         self.bold = bold
@@ -14,7 +12,28 @@ class Keep_track_of_nodes:
         self.bullet_list = bullet_list
         self.numbered_list = numbered_list
         self.hyperlink = hyperlink
-        self.blockquote = blockquote
+
+    def check_for_list_item_in_text(self, text):
+        found = re.search("\s*(\*)|([0-9]\.)", text)
+        if found:
+            next_newline = re.search("\\n", text)
+            if not next_newline:
+                next_newline = (len(text),)
+            else:
+                next_newline = next_newline.span()
+            return (found.span()[1], next_newline[0])
+        return None
+
+    def check_for_bullet_list_in_text(self, text):
+        found_start = re.search('\\n\s*\*\s', text)
+        found_end = re.search("\\n\\n", text)
+        if found_start:
+            if not found_end:
+                found_end = (len(text),)
+            else:
+                found_end = found_end.span()
+            return (found_start.span()[0], found_start.span()[1])
+        return None
 
     def check_for_linebreak_in_text(self, text):
         found = re.search(r'  \n', text)
@@ -42,7 +61,7 @@ class Keep_track_of_nodes:
     def check_for_sub_heading_in_text(self, text):
         found = re.search("#+", text)
         if found:
-            next_newline = re.search("\\n|$", text[found.span()[1]:])
+            next_newline = re.search("\\n", text[found.span()[1]:])
             if not next_newline:
                 next_newline = (len(text),)
             else:
@@ -54,8 +73,17 @@ class Keep_track_of_nodes:
 
     def check_for_horizontal_rule_in_text(self, text):
         found = re.search("\\n-+\\n", text)
+        found_eof = re.search("\\n-+$", text)
+        found_sof = re.search("^-+\\n", text)
+        found_sof_eof = re.search("^-+$", text)
         if found:
-            return found.span()
+            return (found.span()[0] + 1, found.span()[1] - 1)
+        elif found_eof:
+            return (found_eof.span()[0] + 1, found_eof.span()[1])
+        elif found_sof:
+            return (found_sof.span()[0], found_sof.span()[1] - 1)
+        elif found_sof_eof:
+            return found_sof_eof.span()
         return None
 
     def check_for_monospace_in_text(self, text):

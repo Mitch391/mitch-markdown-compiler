@@ -1,4 +1,5 @@
 import re
+import pdb
 import keep_track_of_nodes
 import nodes
 import find_markup
@@ -34,7 +35,12 @@ def search_for_markup(track_node, curr_node, found):
     text = curr_node.get_text()
     markup_type = first_span[2]
 
-    if markup_type in ["bold", "italic", "monospace"]:
+    if not markup_type == "list_item" and track_node.bullet_list == True and curr_node.type_node == "bullet_list":
+        curr_node = close_node(curr_node, text, first_span)
+        track_node.bullet_list = not track_node.bullet_list
+        return found, curr_node
+
+    if markup_type in ["bold", "italic", "monospace", "bullet_list", "numbered_list"]:
         track_node_first_span_bool = getattr(track_node, markup_type)
         setattr(track_node, markup_type, not track_node_first_span_bool)
     elif markup_type in ["sub_heading"]:

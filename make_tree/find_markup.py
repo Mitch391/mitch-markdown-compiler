@@ -8,6 +8,10 @@ def find_all_first_spans(text, track_node):
     found_heading = track_node.check_for_heading_in_text(text)
     found_blockquote = track_node.check_for_blockquote_in_text(text)
     found_linebreak = track_node.check_for_linebreak_in_text(text)
+    #  found_bullet_list = track_node.check_for_bullet_list_in_text(text)
+    #  found_list_item = track_node.check_for_list_item_in_text(text)
+    found_bullet_list = False
+    found_list_item = False
     if found_bold:
         found = found_bold + ("bold",)
         all_first_spans.append(found)
@@ -31,6 +35,12 @@ def find_all_first_spans(text, track_node):
         all_first_spans.append(found)
     if found_linebreak:
         found = found_linebreak + ("linebreak",)
+        all_first_spans.append(found)
+    if found_bullet_list:
+        found = found_bullet_list + ("bullet_list",)
+        all_first_spans.append(found)
+    if found_list_item and track_node.bullet_list == True:
+        found = found_list_item + ("list_item",)
         all_first_spans.append(found)
 
     return all_first_spans
