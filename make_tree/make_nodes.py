@@ -26,6 +26,14 @@ def close_node(curr_node, text, found_span):
 
     return curr_node
 
+def remove_heading_markup(text, first_span):
+    found = re.search('\\n=+(\\n|$)', text)
+    before_markup = text[:found.span()[0]]
+    after_markup = text[found.span()[1]:]
+    new_span1 = first_span[0]
+    new_span2 = first_span[1] - found.span()[0] + 1
+    return (new_span1, new_span2), before_markup + after_markup
+
 def search_for_markup(track_node, curr_node, found):
     found, curr_node, first_span = find_markup.find_first_markup_in_text(track_node, curr_node)
 
@@ -35,12 +43,12 @@ def search_for_markup(track_node, curr_node, found):
     text = curr_node.get_text()
     markup_type = first_span[2]
 
-    if not markup_type == "list_item" and track_node.bullet_list == True and curr_node.type_node == "bullet_list":
-        curr_node = close_node(curr_node, text, first_span)
-        track_node.bullet_list = not track_node.bullet_list
-        return found, curr_node
-
-    if markup_type in ["bold", "italic", "monospace", "bullet_list", "numbered_list"]:
+    #  if not markup_type == "list_item" and track_node.bullet_list == True and curr_node.type_node == "bullet_list":
+    #      curr_node = close_node(curr_node, text, first_span)
+    #      track_node.bullet_list = not track_node.bullet_list
+    #      return found, curr_node
+    #
+    if markup_type in ["bold", "italic", "monospace"]:
         track_node_first_span_bool = getattr(track_node, markup_type)
         setattr(track_node, markup_type, not track_node_first_span_bool)
     elif markup_type in ["sub_heading"]:
@@ -50,6 +58,10 @@ def search_for_markup(track_node, curr_node, found):
         make_empty_node(curr_node, markup_type, text, first_span)
         sub_heading_node = curr_node.next_node[-1]
         sub_heading_node.text[0] = sub_heading_node.text[0][sub_heading_level:]
+        return found, curr_node
+    elif markup_type in ["heading"]:
+        first_span, text = remove_heading_markup(text, first_span)
+        make_empty_node(curr_node, markup_type, text, first_span)
         return found, curr_node
     else:
         make_empty_node(curr_node, markup_type, text, first_span)
@@ -74,4 +86,4 @@ def analyse_source(source_file, track_node):
     start_node = track_node.start_node
     curr_node = start_node
     recursive_node_generation(source_file, track_node, curr_node)
-    return 'html'
+    return start_node
