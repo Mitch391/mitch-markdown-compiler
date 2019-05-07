@@ -33,6 +33,7 @@ class Node:
 
 
 def print_nodes(node, tabs):
+    node.print_level = 0
     for next_node in node.next_node:
         print_node(node, tabs)
         node.print_level += 1
