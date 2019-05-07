@@ -7,6 +7,9 @@ import make_nodes
 import keep_track_of_nodes
 import nodes
 
+sys.path.insert(0, './make_ouput_html')
+import make_html
+
 def exists_output_file(output_file_name):
     if os.path.exists(output_file_name):
         text = "Are you sure you want to overwrite "
@@ -44,6 +47,7 @@ def make_output_file_html(file_name, file_type='html'):
 if __name__ == '__main__':
     if (sys.argv[0] == sys.argv[-1]):
         print("Please add a file to compile")
+        exit(1)
 
     file_name, source_file, flags = checks.check_all(sys.argv)
 
@@ -53,10 +57,11 @@ if __name__ == '__main__':
 
     track_node = keep_track_of_nodes.Keep_track_of_nodes()
     start_node = nodes.Node("root", [source_file.read()])
-    track_node.add_start_node(start_node)
+    track_node.set_start_node(start_node)
 
     node_tree = make_nodes.analyse_source(source_file, track_node)
-    html = 'html'
+    html = make_html.make_html(track_node)
+    #  html = 'html'
     dest_file.write(html)
     
     standard_bottom_text = output_file_html_standard_bottom_text()
