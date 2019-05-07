@@ -2,16 +2,14 @@ import re
 import pdb
 
 class Keep_track_of_nodes:
-    def __init__(self, paragraph=False, italic=False, bold=False,
-                       monospace=False, bullet_list=False, numbered_list=False,
-                       hyperlink=False):
-        self.paragraph = paragraph
-        self.italic = italic
-        self.bold = bold
-        self.monospace = monospace
-        self.bullet_list = bullet_list
-        self.numbered_list = numbered_list
-        self.hyperlink = hyperlink
+    def __init__(self):
+        self.paragraph = False
+        self.italic = False
+        self.bold = False
+        self.monospace = False
+        self.bullet_list = False
+        self.numbered_list = False
+        self.hyperlink = False
 
     def check_for_list_item_in_text(self, text):
         found = re.search("\s*(\*)|([0-9]\.)", text)
@@ -54,6 +52,13 @@ class Keep_track_of_nodes:
     def check_for_heading_in_text(self, text):
         found = re.search('\\n=+(\\n|$)', text)
         if found:
+            part_text = text[:found.span()[0]]
+            reverse_text = part_text[::-1]
+            found_prev_newline = re.search('\\n', reverse_text)
+            if found_prev_newline:
+                span1 = found.span()[0] - found_prev_newline.span()[0]
+            else:
+                span1 = 0
             found = (found.span()[0], found.span()[1])
             return found
         return None
@@ -104,7 +109,7 @@ class Keep_track_of_nodes:
             return found.span()
         return None
 
-    def add_start_node(self, node):
+    def set_start_node(self, node):
         self.start_node = node
 
     def print_values(self):
